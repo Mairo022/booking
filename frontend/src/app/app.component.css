@@ -1,0 +1,10 @@
+.main {
+    overflow: hidden;
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #FFF;
+    color: #4F6C92;
+    box-shadow: 0 0 10px 1px #d1d1d1;
+    border: 2px solid #CBD2E1;
+    border-radius: 10px;
+}

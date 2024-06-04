@@ -1,0 +1,26 @@
+
+<section class="shifts">
+	<ul>
+		@for (shift of shifts; track shift.id; let index = $index) {
+			@if (isNewDay(shift.startTime, index) || index == 0) {
+				<li class="shift_header">{{ toDate(shift.startTime) }}</li>
+			}
+			<li class="shift">
+				<div class="shift__details">
+					<p class="shift__details__time">{{ toTime(shift.startTime) }} - {{ toTime(shift.endTime) }}</p>
+					<p class="shift__details__place">{{ shift.area }}</p>
+				</div>
+				<div class="shift__statuses">
+					@if (shift.booked) {
+						<span class="shift__statuses__text"></span>
+						<button class="shift__statuses__btn btn_cancel" type="button">Cancel</button>
+					}
+					@if (!shift.booked) {
+						<span class="shift__statuses__text"></span>
+						<button class="shift__statuses__btn btn_book" type="button">Book</button>
+					}
+				</div>
+			</li>
+		}
+	</ul>
+</section>

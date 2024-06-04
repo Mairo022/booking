@@ -1,0 +1,25 @@
+.locations {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-bottom: 1px solid #CBD2E1;
+}
+
+.locations__link {
+    display: inline-block;
+    font-size: 1.32rem;
+    color: #A4B8D3;
+    background-color: transparent;
+    border: none;
+    padding: 22px 50px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.locations__link:hover {
+    color: #004FB4;
+}
+
+.activelink {
+    color: #004FB4;
+}

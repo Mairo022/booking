@@ -1,0 +1,79 @@
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.shift_header {
+    color: #576a91;
+    background-color: #f7f8fb;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 15px 22px;
+    border-bottom: 1px solid #CBD2E1;
+}
+
+.shift {
+    display: flex;
+    align-items: center;
+    padding: 15px 22px;
+    border-bottom: 1px solid #CBD2E1;
+}
+
+.shift__details__time {
+    font-size: 1.2rem;
+    color: #576a91;
+    margin: 0;
+}
+
+.shift__details__place {
+    font-size: 1.1rem;
+    color: #A4B8D3;
+    margin: 4px 0 0;
+}
+
+.shift__statuses {
+    margin-left: auto;
+}
+
+.shift__statuses__text {
+    font-size: .98rem;
+    font-weight: 600;
+    margin-right: 40px;
+}
+
+.shift__statuses__btn {
+    font-size: .98rem;
+    font-weight: 600;
+    background: transparent;
+    padding: 10px 30px;
+    border-radius: 100px;
+    cursor: pointer;
+}
+
+.btn_cancel {
+    color: #E2006A;
+    border: 1px solid #FE93B3;
+}
+
+.btn_book {
+    color: #16A64D;
+    border: 1px solid #55CB82;
+}
+
+.btn-disabled {
+    filter: opacity(0.3) saturate(0.6);
+}
+
+.btn_cancel:hover {
+    background-color: #EED2DF;
+}
+
+.btn_book:hover {
+    background-color: #CAEFD8;
+}
+
+.btn-disabled:hover {
+    background-color: transparent;
+    cursor: auto;
+}

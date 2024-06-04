@@ -1,0 +1,10 @@
+<div class="locations">
+    <a *ngFor="let location of locations | keyvalue"
+        class="locations__link"
+        [attr.aria-label]="location.key"
+        [queryParams]="{location: location.key}"
+        routerLink="." 
+        routerLinkActive="activelink"
+    > {{ location.key }} ({{ location.value }})</a>
+</div>
+<app-shifts [shifts]="shiftsProp"></app-shifts>
