@@ -65,6 +65,18 @@ ul {
     filter: opacity(0.3) saturate(0.6);
 }
 
+.btn_book-loading {
+    color: transparent;
+    background: url("../../assets/spinner_green.svg") no-repeat center;
+    background-size: 25px;
+}
+
+.btn_cancel-loading {
+    color: transparent;
+    background: url("../../assets/spinner_red.svg") no-repeat center;
+    background-size: 25px;
+}
+
 .btn_cancel:hover {
     background-color: #EED2DF;
 }

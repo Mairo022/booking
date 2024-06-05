@@ -21,7 +21,11 @@ export class ShiftsUserComponent {
     this.apiService
       .getShifts()
       .subscribe((shifts) => {
-        this.shifts = shifts
+        this.shifts = this.getBookedShifts(shifts)
     })
+  }
+
+  private getBookedShifts(shifts: Shift[]): Shift[] {
+    return shifts.filter(shift => shift.booked)
   }
 }

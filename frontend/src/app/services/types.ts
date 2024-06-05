@@ -19,4 +19,5 @@ export interface Shift {
     booked: boolean
     startTime: number
     endTime: number
+    loading?: boolean
 }

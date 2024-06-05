@@ -13,11 +13,11 @@
 				<div class="shift__statuses">
 					@if (shift.booked) {
 						<span class="shift__statuses__text"></span>
-						<button class="shift__statuses__btn btn_cancel" type="button">Cancel</button>
+						<button [class.btn_cancel-loading]="shift.loading" class="shift__statuses__btn btn_cancel" (click)="cancelShift(shift.id, index)" type="button">Cancel</button>
 					}
 					@if (!shift.booked) {
 						<span class="shift__statuses__text"></span>
-						<button class="shift__statuses__btn btn_book" type="button">Book</button>
+						<button [class.btn_book-loading]="shift.loading" class="shift__statuses__btn btn_book" (click)="bookShift(shift.id, index)" type="button">Book</button>
 					}
 				</div>
 			</li>

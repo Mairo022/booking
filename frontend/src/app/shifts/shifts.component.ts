@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Shift } from '../services/types';
+import { ApiService } from '../services/api.service'
 
 @Component({
   selector: 'app-shifts',
@@ -7,12 +8,56 @@ import { Shift } from '../services/types';
   imports: [],
   templateUrl: './shifts.component.html',
   styleUrl: './shifts.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class ShiftsComponent {
   @Input() shifts!: Shift[]
 
   private dayMaxTS = 0
+
+  constructor(
+    public apiService: ApiService
+  ) {}
+
+  bookShift(id: string, i: number): void {
+    this.setShiftLoading(i, true)
+    
+    this.apiService.bookShift(id)
+      .subscribe({
+        next: (shift: Shift) => {
+          this.updateShift(shift, i)
+          this.setShiftLoading(i, false)
+        },
+        error: (e) => {
+          console.error(e)
+          this.setShiftLoading(i, false)
+        }
+      })
+  }
+
+  cancelShift(id: string, i: number): void {
+    this.setShiftLoading(i, true)
+
+    this.apiService.cancelShit(id)
+      .subscribe({
+        next: (shift: Shift) => {
+          this.updateShift(shift,i)
+          this.setShiftLoading(i, false)
+        },
+        error: (e) => {
+          console.error(e)
+          this.setShiftLoading(i, false)
+        }
+      })
+  }
+
+  private updateShift(shift: Shift, index: number): void {
+    this.shifts[index] = shift
+  }
+
+  private setShiftLoading(index: number, state: boolean): void {
+    this.shifts[index].loading = state
+  }
 
   isNewDay(timestamp: number, index: number): boolean {
     if (index == 0) this.resetTS()
