@@ -36,6 +36,10 @@ ul {
     margin-left: auto;
 }
 
+.status_overlap {
+    color: #E2006A;
+}
+
 .shift__statuses__text {
     font-size: .98rem;
     font-weight: 600;
@@ -61,8 +65,15 @@ ul {
     border: 1px solid #55CB82;
 }
 
-.btn-disabled {
+.btn_book:disabled,
+.btn_cancel:disabled {
     filter: opacity(0.3) saturate(0.6);
+    cursor: initial;
+}
+
+.btn_book:disabled:hover,
+.btn_cancel:disabled:hover {
+    background: transparent;
 }
 
 .btn_book-loading {

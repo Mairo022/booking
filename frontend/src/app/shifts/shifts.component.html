@@ -12,12 +12,37 @@
 				</div>
 				<div class="shift__statuses">
 					@if (shift.booked) {
-						<span class="shift__statuses__text"></span>
-						<button [class.btn_cancel-loading]="shift.loading" class="shift__statuses__btn btn_cancel" (click)="cancelShift(shift.id, index)" type="button">Cancel</button>
+						<span class="shift__statuses__text">Booked</span>
+						<button
+              type="button"
+              class="shift__statuses__btn btn_cancel"
+							[disabled]="isOlder(shift.startTime)"
+							[class.btn_cancel-loading]="shift.loading"
+							(click)="cancelShift(shift.id, index)">
+							Cancel
+						</button>
 					}
 					@if (!shift.booked) {
-						<span class="shift__statuses__text"></span>
-						<button [class.btn_book-loading]="shift.loading" class="shift__statuses__btn btn_book" (click)="bookShift(shift.id, index)" type="button">Book</button>
+						@if (shift.overlapping) {
+							<span class="shift__statuses__text status_overlap">Overlapping</span>
+							<button
+								type="button"
+								class="shift__statuses__btn btn_book"
+								disabled
+								[class.btn_book-loading]="shift.loading"
+								(click)="bookShift(shift.id, index)">
+								Book
+							</button>
+						}
+						@if (!shift.overlapping) {
+							<button
+								type="button"
+								class="shift__statuses__btn btn_book"
+								[class.btn_book-loading]="shift.loading"
+								(click)="bookShift(shift.id, index)">
+								Book
+							</button>
+						}
 					}
 				</div>
 			</li>

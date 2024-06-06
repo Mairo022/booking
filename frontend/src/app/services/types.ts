@@ -20,4 +20,5 @@ export interface Shift {
     startTime: number
     endTime: number
     loading?: boolean
+    overlapping?: boolean
 }

@@ -7,4 +7,4 @@
         routerLinkActive="activelink"
     > {{ location.key }} ({{ location.value }})</a>
 </div>
-<app-shifts [shifts]="shiftsProp"></app-shifts>
+<app-shifts (statusChangeEvent)="handleShiftStatusChange()" [shifts]="shiftsProp"></app-shifts>

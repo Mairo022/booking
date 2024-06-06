@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Shift } from '../services/types';
 import { ApiService } from '../services/api.service'
 
@@ -12,6 +12,7 @@ import { ApiService } from '../services/api.service'
 })
 export class ShiftsComponent {
   @Input() shifts!: Shift[]
+  @Output() statusChangeEvent = new EventEmitter<void>()
 
   private dayMaxTS = 0
 
@@ -25,8 +26,7 @@ export class ShiftsComponent {
     this.apiService.bookShift(id)
       .subscribe({
         next: (shift: Shift) => {
-          this.updateShift(shift, i)
-          this.setShiftLoading(i, false)
+          this.handleShiftUpdate(shift, i, false)
         },
         error: (e) => {
           console.error(e)
@@ -41,14 +41,19 @@ export class ShiftsComponent {
     this.apiService.cancelShit(id)
       .subscribe({
         next: (shift: Shift) => {
-          this.updateShift(shift,i)
-          this.setShiftLoading(i, false)
+          this.handleShiftUpdate(shift, i, false)
         },
         error: (e) => {
           console.error(e)
           this.setShiftLoading(i, false)
         }
       })
+  }
+
+  private handleShiftUpdate(shift: Shift, index: number, loadState: boolean): void {
+    this.updateShift(shift, index)
+    this.setShiftLoading(index, loadState)
+    this.statusChangeEvent.emit()
   }
 
   private updateShift(shift: Shift, index: number): void {
@@ -70,6 +75,10 @@ export class ShiftsComponent {
 
   private resetTS(): void {
     this.dayMaxTS = new Date().setHours(23,59,59,999)
+  }
+
+  isOlder(timestamp: number): boolean {
+    return timestamp < new Date().getTime()
   }
 
   toDate(timestamp: number): string {

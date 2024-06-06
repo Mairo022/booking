@@ -29,7 +29,7 @@ export class ShiftsAvailableComponent {
     this.apiService
       .getShifts()
       .subscribe((shifts) => {
-        const activeShifts = this.getSortedActiveShifts(shifts)
+        const activeShifts = this.getSortedActiveShiftsWithOverlaps(shifts)
 
         this.shifts = activeShifts
         this.shiftsProp = this.filterShifts("area" as keyof Shift, location, activeShifts)
@@ -41,15 +41,66 @@ export class ShiftsAvailableComponent {
     this.route.queryParamMap
       .subscribe(params => {
         const location = params.get("location")
-        this.shiftsProp = this.filterShifts("area" as keyof Shift, location)          
+        this.shiftsProp = this.filterShifts("area" as keyof Shift, location)
       })
   }
 
-  getSortedActiveShifts(shifts: Shift[]): Shift[] {
+  handleShiftStatusChange(): void {
+    this.shiftsProp = this.setShiftOverlaps(this.shiftsProp)
+  }
+
+  private getSortedActiveShiftsWithOverlaps(shifts: Shift[]): Shift[] {
+    return this.setShiftOverlaps(this.getSortedActiveShifts(shifts))
+  }
+
+  private getSortedActiveShifts(shifts: Shift[]): Shift[] {
     const currentTS = new Date().getTime()
     return shifts
             .sort((a, b) => a.startTime - b.startTime)
             .filter(shift => !shift.booked && shift.startTime > currentTS || shift.booked && shift.endTime > currentTS)
+  }
+
+  private setShiftOverlaps(shifts: Shift[]): Shift[] {
+    return shifts.map((shift, i) => !shift.booked
+        ? this.isShiftOverlapping(i, shifts)
+          ? { ...shift, overlapping: true }
+          : { ...shift, overlapping: false } 
+        : shift)
+  }
+
+  private isShiftOverlapping(index: number, shifts: Shift[]): boolean {
+    const shift = shifts[index]
+    const startTS = shift.startTime
+    const endTS = shift.endTime
+
+    const dayInMS = 24 * 3600 * 1000
+    const dayAgoTS = new Date(startTS - dayInMS).getTime()
+    
+    for (let i = index-1; i > -1; i--) {
+      const shiftTemp = shifts[i]
+      const insideTimeframe = shiftTemp.endTime > startTS
+      const isOverlap = insideTimeframe && shiftTemp.booked
+
+      if (isOverlap) return true
+
+      const yesterday = shiftTemp.endTime < dayAgoTS
+      if (yesterday) break;
+    }
+
+    const dayAfterTS = new Date(endTS - dayInMS).getTime()
+    
+    for (let i = index+1; i < shifts.length; i++) {
+      const shiftTemp = shifts[i]
+      const insideTimeframe = shiftTemp.startTime < endTS
+      const isOverlap = insideTimeframe && shiftTemp.booked
+
+      if (isOverlap) return true
+
+      const tomorrow = shiftTemp.endTime < dayAfterTS
+      if (tomorrow) break;
+    }
+
+    return false
   }
 
   filterShifts(property: keyof Shift, value: string | number | null, shifts?: Shift[]): Shift[] {
