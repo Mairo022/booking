@@ -23,36 +23,37 @@ export class ShiftsAvailableComponent {
   shiftsProp: Shift[] = []
   locations: Map<string, number> = new Map()
 
-  firstRender = true
-
   ngOnInit() {
     const location = this.route.snapshot.queryParamMap.get("location")
 
     this.apiService
       .getShifts()
       .subscribe((shifts) => {
-        this.locations = this.createLocations(shifts)
-        this.shifts = shifts
-        
-        if (location) {
-          this.shiftsProp = this.filterShifts("area" as keyof Shift, location, shifts)
-        } else {
-          this.addLocationParameter(this.locations)
-        }
-        this.firstRender = false
+        const activeShifts = this.getSortedActiveShifts(shifts)
+
+        this.shifts = activeShifts
+        this.shiftsProp = this.filterShifts("area" as keyof Shift, location, activeShifts)
+        this.locations = this.createLocations(activeShifts)
+
+        if (!location) this.addLocationParameter(this.locations)
     })
 
     this.route.queryParamMap
       .subscribe(params => {
         const location = params.get("location")
-
-        if (location && !this.firstRender) {
-          this.shiftsProp = this.filterShifts("area" as keyof Shift, location)          
-        }
+        this.shiftsProp = this.filterShifts("area" as keyof Shift, location)          
       })
   }
 
-  filterShifts(property: keyof Shift, value: string | number, shifts?: Shift[]): Shift[] {
+  getSortedActiveShifts(shifts: Shift[]): Shift[] {
+    const currentTS = new Date().getTime()
+    return shifts
+            .sort((a, b) => a.startTime - b.startTime)
+            .filter(shift => !shift.booked && shift.startTime > currentTS || shift.booked && shift.endTime > currentTS)
+  }
+
+  filterShifts(property: keyof Shift, value: string | number | null, shifts?: Shift[]): Shift[] {
+    if (!value && shifts) return shifts
     if (shifts) return shifts.filter(shift => shift[property] === value)
     return this.shifts.filter(shift => shift[property] === value)
   }
