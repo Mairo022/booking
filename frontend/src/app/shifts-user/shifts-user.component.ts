@@ -25,6 +25,10 @@ export class ShiftsUserComponent {
     })
   }
 
+  handleShiftStatusChange(): void {
+    this.shifts = this.getBookedShifts(this.shifts)
+  }
+
   private getBookedShifts(shifts: Shift[]): Shift[] {
     return shifts.filter(shift => shift.booked)
   }
