@@ -20,6 +20,10 @@ export class ShiftsUserComponent {
   isDataLoaded = false
 
   ngOnInit() {
+    this.initLoadShifts()
+  }
+
+  private initLoadShifts() {
     this.apiService
       .getShifts()
       .subscribe({

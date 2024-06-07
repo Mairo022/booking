@@ -26,6 +26,11 @@ export class ShiftsAvailableComponent {
   isDataLoaded = false
 
   ngOnInit() {
+    this.initLoadShifts()
+    this.initReactToParameterChanges()
+  }
+
+  private initLoadShifts(): void {
     const location = this.route.snapshot.queryParamMap.get("location")
 
     this.apiService
@@ -37,7 +42,7 @@ export class ShiftsAvailableComponent {
           this.shifts = activeShifts
           this.shiftsProp = this.filterShifts("area" as keyof Shift, location, activeShifts)
           this.locations = this.createLocations(activeShifts)
-  
+
           this.setLoaded()
           if (!location) this.addLocationParameter(this.locations)
         },
@@ -46,7 +51,9 @@ export class ShiftsAvailableComponent {
           this.setLoaded() 
         }
       })
+  }
 
+  private initReactToParameterChanges(): void {
     this.route.queryParamMap
       .subscribe(params => {
         const location = params.get("location")
@@ -112,13 +119,13 @@ export class ShiftsAvailableComponent {
     return false
   }
 
-  filterShifts(property: keyof Shift, value: string | number | null, shifts?: Shift[]): Shift[] {
+  private filterShifts(property: keyof Shift, value: string | number | null, shifts?: Shift[]): Shift[] {
     if (!value && shifts) return shifts
     if (shifts) return shifts.filter(shift => shift[property] === value)
     return this.shifts.filter(shift => shift[property] === value)
   }
 
-  createLocations(shifts: Shift[]): Map<string, number> {
+  private createLocations(shifts: Shift[]): Map<string, number> {
     const locations = new Map<string, number>()
 
     for (const shift of shifts) {
@@ -134,7 +141,7 @@ export class ShiftsAvailableComponent {
     return locations
   }
 
-  addLocationParameter(locations: Map<string, number>): void {
+  private addLocationParameter(locations: Map<string, number>): void {
     this.router.navigate([], {
       queryParams: {
         location: locations.keys().next().value
