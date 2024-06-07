@@ -17,5 +17,6 @@
 }
 
 .nav .activelink {
+    pointer-events: none;
     color: #004FB4;
 }
