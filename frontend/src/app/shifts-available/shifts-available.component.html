@@ -1,3 +1,7 @@
+@if (isDataLoaded && shifts.length == 0) {
+    <p class="shifts-empty">No shifts available</p>
+}
+<app-loading [isLoading]="!isDataLoaded"></app-loading>
 <div class="locations">
     <a *ngFor="let location of locations | keyvalue"
         class="locations__link"

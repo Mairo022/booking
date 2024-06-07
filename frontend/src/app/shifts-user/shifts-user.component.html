@@ -1,1 +1,5 @@
+@if (isDataLoaded && shifts.length == 0) {
+  <p class="shifts-empty">No shifts booked</p>
+}
+<app-loading [isLoading]="!isDataLoaded"></app-loading>
 <app-shifts (statusChangeEvent)="handleShiftStatusChange()" [shifts]="shifts"></app-shifts>

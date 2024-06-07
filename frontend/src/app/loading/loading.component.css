@@ -1,0 +1,7 @@
+.loading {
+    height: 75px;
+    color: transparent;
+    background: url("../../assets/spinner_red.svg") no-repeat center;
+    background-size: 35px;
+    filter: hue-rotate(240deg) saturate(0.9);
+}

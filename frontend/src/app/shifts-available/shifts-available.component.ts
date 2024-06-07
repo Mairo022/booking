@@ -4,11 +4,12 @@ import { ShiftsComponent } from '../shifts/shifts.component';
 import { Shift } from '../services/types';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-shifts-available',
   standalone: true,
-  imports: [ShiftsComponent, RouterLink, RouterLinkActive, CommonModule],
+  imports: [ShiftsComponent, RouterLink, RouterLinkActive, CommonModule, LoadingComponent],
   templateUrl: './shifts-available.component.html',
   styleUrl: './shifts-available.component.css'
 })
@@ -22,21 +23,29 @@ export class ShiftsAvailableComponent {
   shifts: Shift[] = []
   shiftsProp: Shift[] = []
   locations: Map<string, number> = new Map()
+  isDataLoaded = false
 
   ngOnInit() {
     const location = this.route.snapshot.queryParamMap.get("location")
 
     this.apiService
       .getShifts()
-      .subscribe((shifts) => {
-        const activeShifts = this.getSortedActiveShiftsWithOverlaps(shifts)
+      .subscribe({
+        next: (shifts) => {
+          const activeShifts = this.getSortedActiveShiftsWithOverlaps(shifts)
 
-        this.shifts = activeShifts
-        this.shiftsProp = this.filterShifts("area" as keyof Shift, location, activeShifts)
-        this.locations = this.createLocations(activeShifts)
-
-        if (!location) this.addLocationParameter(this.locations)
-    })
+          this.shifts = activeShifts
+          this.shiftsProp = this.filterShifts("area" as keyof Shift, location, activeShifts)
+          this.locations = this.createLocations(activeShifts)
+  
+          this.setLoaded()
+          if (!location) this.addLocationParameter(this.locations)
+        },
+        error: (e) => {
+          console.log(e);
+          this.setLoaded() 
+        }
+      })
 
     this.route.queryParamMap
       .subscribe(params => {
@@ -131,5 +140,9 @@ export class ShiftsAvailableComponent {
         location: locations.keys().next().value
       }
     })
+  }
+
+  private setLoaded(): void {
+    this.isDataLoaded = true
   }
 }
