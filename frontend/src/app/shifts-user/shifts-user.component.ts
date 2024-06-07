@@ -21,7 +21,7 @@ export class ShiftsUserComponent {
     this.apiService
       .getShifts()
       .subscribe((shifts) => {
-        this.shifts = this.getBookedShifts(shifts)
+        this.shifts = this.getSortedBookedShifts(shifts)
     })
   }
 
@@ -31,5 +31,11 @@ export class ShiftsUserComponent {
 
   private getBookedShifts(shifts: Shift[]): Shift[] {
     return shifts.filter(shift => shift.booked)
+  }
+
+  private getSortedBookedShifts(shifts: Shift[]): Shift[] {
+    return this
+      .getBookedShifts(shifts)
+      .sort((a, b) => a.startTime - b.startTime)
   }
 }
